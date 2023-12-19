@@ -1,0 +1,15 @@
+server:
+  port: <port_to_run_the_server>
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+  datasource:
+    username: <your_username>
+    password: <your_password>
+    url: <jdbc_to_db>
+  flyway:
+    enabled: true
+    repair: true
