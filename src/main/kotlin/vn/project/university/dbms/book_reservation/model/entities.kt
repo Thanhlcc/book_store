@@ -1,13 +1,14 @@
-package vn.project.university.dbms.book_reservation.models
+package vn.project.university.dbms.book_reservation.model
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.annotations.UuidGenerator
-import vn.project.university.dbms.book_reservation.constants.AccountRole
-import vn.project.university.dbms.book_reservation.constants.AccountRole.BORROWER
-import vn.project.university.dbms.book_reservation.constants.AccountStatus
-import vn.project.university.dbms.book_reservation.constants.BookStatus
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import vn.project.university.dbms.book_reservation.constant.AccountRole
+import vn.project.university.dbms.book_reservation.constant.AccountStatus
+import vn.project.university.dbms.book_reservation.constant.BookStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -59,21 +60,42 @@ class Reservation(
 
 @Entity
 class Account(
-    @Column(nullable = false, unique = true) val username: String,
-    @Column(nullable = false) val password: String,
+    @Column(nullable = false, unique = true, name="username") val _username: String,
+    @Column(nullable = false, name = "password") val _password: String,
     @Column(nullable = false, unique = true) val email: String,
-    @Column(columnDefinition = "CHAR(15)") val phoneNumber: String?,
-    @Column(columnDefinition = "CHAR(12)") val employeeId: String?,
-    @CreationTimestamp val createdTime: LocalDateTime?,
-    @Id @UuidGenerator val id: UUID?,
-) {
-    @Enumerated(EnumType.STRING) @Column(nullable = false) var status = AccountStatus.ACTIVE
-    @Enumerated(EnumType.STRING) @Column(nullable = false) var role = AccountRole.BORROWER
+    @Id @UuidGenerator val id: UUID? = null,
+) : UserDetails {
+    @Column(columnDefinition = "CHAR(15)")
+    val phoneNumber: String? =  null
+    @Column(columnDefinition = "CHAR(12)")
+    val employeeId: String? = null
+    @CreationTimestamp val createdTime: LocalDateTime? = null
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var status = AccountStatus.ACTIVE
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var role = AccountRole.BORROWER
+
     @OneToMany(mappedBy = "borrower", cascade = [CascadeType.ALL], orphanRemoval = true)
     val reservations: MutableList<Reservation> = mutableListOf()
 
     @OneToMany(mappedBy = "borrower", cascade = [CascadeType.ALL], orphanRemoval = true)
     val borrowedBook: MutableList<Checkout> = mutableListOf()
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return mutableListOf(GrantedAuthority { "ROLE_${role}" })
+    }
+
+    override fun getPassword(): String = this._password
+
+    override fun getUsername(): String = _username
+
+    override fun isAccountNonExpired(): Boolean = true
+
+    override fun isAccountNonLocked(): Boolean = true
+
+    override fun isCredentialsNonExpired(): Boolean = true
+    override fun isEnabled(): Boolean = true
 }
 
 @Entity

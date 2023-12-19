@@ -1,4 +1,4 @@
-package vn.project.university.dbms.book_reservation.constants
+package vn.project.university.dbms.book_reservation.constant
 
 enum class BookStatus {
     AVAILABLE,

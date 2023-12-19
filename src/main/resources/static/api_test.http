@@ -1,0 +1,16 @@
+GET http://localhost:3000/api/v1/books
+
+###
+POST http://localhost:3000/accounts/register
+Content-Type: application/json
+
+{
+  "username": "thanh",
+  "password": "thanh1102",
+  "email" : "lccongthanh1102@gmail.com"
+}
+
+###
+GET http://localhost:3000/api/v1/books
+
+<> 2023-12-19T224358.200.json

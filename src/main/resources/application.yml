@@ -1,6 +1,8 @@
 server:
   port: 3000
 spring:
+  jackson:
+    default-property-inclusion: non_null
   jpa:
     hibernate:
       ddl-auto: validate
