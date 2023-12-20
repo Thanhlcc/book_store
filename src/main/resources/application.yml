@@ -1,17 +1,26 @@
 server:
   port: 3000
 spring:
+  data:
+    web:
+      pageable:
+        max-page-size: 20
+        default-page-size: 5
   jackson:
     default-property-inclusion: non_null
   jpa:
     hibernate:
       ddl-auto: validate
     open-in-view: false
-    show-sql: true
+#    show-sql: true
   datasource:
     username: root
-    password: thanh1102
+    password: root
     url: jdbc:mysql://localhost:3306/bookstore
   flyway:
     enabled: true
     repair: true
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG

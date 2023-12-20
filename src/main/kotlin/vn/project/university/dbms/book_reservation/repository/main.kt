@@ -1,17 +1,26 @@
 package vn.project.university.dbms.book_reservation.repository
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import vn.project.university.dbms.book_reservation.constant.AccountStatus
-import vn.project.university.dbms.book_reservation.model.Account
-import vn.project.university.dbms.book_reservation.model.Book
-import vn.project.university.dbms.book_reservation.model.Checkout
-import vn.project.university.dbms.book_reservation.model.Reservation
+import vn.project.university.dbms.book_reservation.model.*
 import java.util.*
 
-interface BookRepository : CrudRepository<Book, Long>
+interface BookRepository : CrudRepository<Book, Long>{
+    @Query("""
+        SELECT * FROM book
+    """, nativeQuery = true)
+    fun findAll(pageable : Pageable): Page<Book>
+
+//    fun findByIdAndVersionsId(bookId: Long, version: Int) : Book
+}
+interface BookCopyRepository: CrudRepository<BookCopy, Long>{
+    fun findByBookDataIdAndVersion(bookId: Long, version: Int) : BookCopy?
+}
 interface AccountRepository : CrudRepository<Account, UUID>{
     @Query("""
         SELECT acc

@@ -19,7 +19,7 @@ import vn.project.university.dbms.book_reservation.exception.AccountException
 import vn.project.university.dbms.book_reservation.repository.AccountRepository
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {

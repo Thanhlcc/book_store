@@ -2,6 +2,7 @@ package vn.project.university.dbms.book_reservation.controller
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
@@ -48,9 +49,10 @@ class AccountController(
             )
         }
         return ResponseTemplate<AccountRes>(
-            status = ResponseState.SUCCESS,
+            success = true,
             message = "Account created successfully",
-            data = savedAccount
+            payload = savedAccount,
+            status_code = HttpStatus.OK
         )
     }
     @PutMapping("/{id}")
@@ -63,9 +65,10 @@ class AccountController(
             AccountRes(username = _username, status = status, id = id)
         }
         return ResponseTemplate<AccountRes>(
-            status = ResponseState.SUCCESS,
+            success = true,
             message = "Update successfully",
-            data = savedAccount
+            payload = savedAccount,
+            status_code = HttpStatus.OK
         )
     }
     data class RegisterReq(
