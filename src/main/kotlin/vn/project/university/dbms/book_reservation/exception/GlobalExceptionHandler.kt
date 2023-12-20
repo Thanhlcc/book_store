@@ -1,11 +1,13 @@
 package vn.project.university.dbms.book_reservation.exception
 
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import vn.project.university.dbms.book_reservation.model.ResponseTemplate
 
+data class ValidationError(val field: String, val message: String)
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -31,6 +33,18 @@ class GlobalExceptionHandler {
             success = false,
             message = exception.message ?: "Generic source failure",
             status_code = HttpStatus.BAD_REQUEST
+        )
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleWebExchangeBindException(e: MethodArgumentNotValidException): ResponseTemplate<Any> {
+        val _error = e.bindingResult.fieldErrors.map {
+            val defaultMessage = it.defaultMessage ?: "Validation failed"
+            ValidationError(it.field, defaultMessage)}
+            return ResponseTemplate<Any>(
+                status_code = HttpStatus.BAD_REQUEST,
+                success = false,
+                message =  _error.toString()
         )
     }
 }
