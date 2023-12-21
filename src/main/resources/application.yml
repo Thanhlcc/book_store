@@ -7,7 +7,7 @@ spring:
     web:
       pageable:
         max-page-size: 20
-        default-page-size: 5
+        default-page-size: 50
   jackson:
     default-property-inclusion: non_null
   jpa:

@@ -1,5 +1,6 @@
 package vn.project.university.dbms.book_reservation.exception
 
+import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -25,7 +26,8 @@ class GlobalExceptionHandler {
         BookException::class,
         AccountException::class,
         ReservationException::class,
-        CheckoutException::class
+        CheckoutException::class,
+        PropertyReferenceException::class
     )
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun genericResourceExceptionHandler(exception: RuntimeException): ResponseTemplate<Any> {

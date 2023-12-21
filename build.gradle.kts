@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
     kotlin("plugin.jpa") version "1.8.0"
+    kotlin("kapt") version "1.9.20"
 }
 group = "vn.project.university.dbms"
 version = "0.0.1-SNAPSHOT"
@@ -16,10 +17,19 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
 }
+kapt {
+    javacOptions {
+        option("querydsl.entityAccessors", true)
+    }
+    arguments {
+        arg("plugin", "com.querydsl.apt.jpa.JPAAnnotationProcessor")
+    }
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
+
 
 repositories {
     mavenCentral()
@@ -38,6 +48,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 }
 
 tasks.withType<KotlinCompile> {

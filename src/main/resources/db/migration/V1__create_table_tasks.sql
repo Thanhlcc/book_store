@@ -1,6 +1,6 @@
 create table account
 (
-    created_at   datetime                              default CURRENT_TIMESTAMP,
+    created_at   datetime                                       default CURRENT_TIMESTAMP,
     phone_number char(15)                              null,
     employee_id  char(12)                              null,
     id           binary(16)                            not null primary key,
@@ -39,17 +39,20 @@ create table publisher
 
 create table book_copy
 (
-    version      int                                    default 1,
-    year_publish date   not null,
+    version      int default 1,
+    year_publish date     not null,
     id           bigint AUTO_INCREMENT primary key,
-    publisher_id bigint not null,
-    quantity     int                                    default 1,
-    book_data bigint not null,
+    publisher_id bigint   not null,
+    quantity     int default 1,
+    isbn         char(11) not null unique,
+    book_data    bigint   not null,
+    available int ,
     constraint fk_bookcopy_publisher
         foreign key (publisher_id) references publisher (id) on delete cascade on update cascade,
     constraint fk_bookcopy_book
         foreign key (book_data) references book (id) on delete cascade,
-    constraint unique_version_bookdata unique (version, book_data)
+    constraint unique_version_bookdata unique (version, book_data),
+    check ( available <= book_copy.quantity )
 );
 
 
@@ -61,8 +64,7 @@ create table checkout
     pickup_at   datetime     null,
     start_time  datetime default CURRENT_TIMESTAMP,
     borrower_id binary(16)   not null,
-    id          varchar(255) not null
-        primary key,
+    id          binary not null primary key,
     constraint fk_checkout_book
         foreign key (book_id) references book_copy (id),
     constraint fk_checkout_borrower
@@ -77,7 +79,7 @@ create table reservation
     pickup_at   datetime     null,
     start_time  datetime default CURRENT_TIMESTAMP,
     borrower_id binary(16)   not null,
-    id          varchar(255) not null primary key,
+    id          binary not null primary key,
     constraint fk_reservation_borrower
         foreign key (borrower_id) references account (id)
             on delete cascade,
