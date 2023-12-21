@@ -11,6 +11,7 @@ COPY gradlew .
 COPY gradle gradle
 
 # Download and cache the Gradle distribution
+RUN chmod +x gradlew
 RUN ./gradlew --version
 
 # Copy the application source code
